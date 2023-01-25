@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DotNotifierView">
+        <attr name="dnv_blink" format="boolean" />
+        <attr name="dnv_blink_duration" format="integer" />
+        <attr name="dnv_blink_length" format="dimension" />
+    </declare-styleable>
+</resources>
