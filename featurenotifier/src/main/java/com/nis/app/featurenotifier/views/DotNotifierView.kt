@@ -56,6 +56,7 @@ class DotNotifierView : AppCompatImageView {
 
     private fun initialise() {
         mInitialized = true
+        setImageResource(R.color.red);
         mBitmapPaint.isAntiAlias = true
         mBitmapPaint.isDither = true
         mBitmapPaint.isFilterBitmap = true
@@ -63,6 +64,7 @@ class DotNotifierView : AppCompatImageView {
         mBitmapPaint.colorFilter = mColorFilter
 
         outlineProvider = OutlineProvider()
+
     }
 
     @SuppressLint("CanvasSize")
@@ -233,11 +235,13 @@ class DotNotifierView : AppCompatImageView {
     }
 
     companion object {
-        private const val DEF_DOT_COLOR = Color.RED // red
+        private val DEF_DOT_COLOR = R.color.red // red
         private const val DEF_BLINK_STATUS = false // initial blink false
         private const val DEF_BLINK_DURATION = 5 // in seconds
         private const val DEF_BLINK_LENGTH = 3 // default blink radius in dp
         private const val DEFAULT_IMAGE_ALPHA = 255
+        private const val DEF_HEIGHT = 20;
+        private const val DEF_WIDTH = 20
 
         private val BITMAP_CONFIG = Bitmap.Config.ARGB_8888
         private const val COLOR_DRAWABLE_DIMENSION = 2

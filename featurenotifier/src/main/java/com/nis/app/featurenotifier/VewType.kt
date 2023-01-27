@@ -6,7 +6,20 @@ enum class ViewType(private val type: String, private val id: Int) {
     DIALOGUE("dialogue", 3),
     NUMBER("number", 4);
 
-    open fun string(): String? {
+    fun string(): String {
         return type;
+    }
+
+    companion object {
+        fun fromString(type: String): ViewType? {
+            var viewType: ViewType? = null;
+            for (t in values()) {
+                if (t.string() == type) {
+                    viewType = t;
+                    break;
+                }
+            }
+            return viewType;
+        }
     }
 }

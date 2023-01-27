@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace 'com.nis.app.featurenotifier'
-    compileSdk 33
+    namespace 'com.nis.app.testapp'
+    compileSdk 32
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -38,9 +38,4 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation "com.google.code.gson:gson:2.8.5"
-
-    implementation "io.reactivex.rxjava2:rxjava:2.1.16"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
-
 }

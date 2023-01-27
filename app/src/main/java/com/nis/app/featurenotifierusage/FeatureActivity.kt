@@ -1,6 +1,5 @@
 package com.nis.app.featurenotifierusage
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
@@ -8,23 +7,21 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.nis.app.featurenotifier.NotifierCore
 import com.nis.app.featurenotifier.NotifierLib
 
-class MainActivity : AppCompatActivity() {
-    private val TAG = "MainActivity"
+class FeatureActivity : AppCompatActivity() {
+    val tagName = "settings"
     private lateinit var notifierCore: NotifierCore
+    private val TAG = "FeatureActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val tagName = "settings";
-
-        // goes to app class
-        NotifierLib.getInstance()?.build(applicationContext, NotifierProps())
-
+        setContentView(R.layout.activity_feature)
         NotifierLib.getInstance()?.getNotifierCore()?.let { notifierCore = it }
 
-        val layout = findViewById<FrameLayout>(R.id.lol)
+        val layout = findViewById<FrameLayout>(R.id.root)
         val dotView = notifierCore.getDotNotifierForTag(tagName)
 
         notifierCore.canShowNotifierHere(tagName)?.observe(this) {
@@ -39,8 +36,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<Button>(R.id.button).setOnClickListener {
-            startActivity(Intent(this, FeatureActivity::class.java));
-        }
+        findViewById<Button>(R.id.button).setOnClickListener { notifierCore.notifierShown(tagName) }
+
     }
 }
