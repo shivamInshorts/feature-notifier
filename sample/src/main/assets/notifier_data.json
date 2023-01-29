@@ -1,0 +1,74 @@
+{
+  "notifier_data": {
+    "default_view_type": "dot",
+    "nodes": {
+      "discover": {
+        "count": 3,
+        "view_type": {
+          "dot": {
+            "color": "blue"
+          }
+        },
+        "path": "/home"
+      },
+      "settings": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "blue"
+          }
+        },
+        "path": "/home/discover"
+      },
+      "change_relevancy": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "green"
+          }
+        },
+        "path": "/home/discover/settings",
+        "is_feature": true
+      },
+      "pools": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "green"
+          }
+        },
+        "path": "/home/discover",
+        "is_feature": true
+      },
+      "unread": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "green"
+          }
+        },
+        "path": "/home/discover",
+        "is_feature": true
+      },
+      "feed_screen": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "blue"
+          }
+        },
+        "path": "/home"
+      },
+      "bookmarks": {
+        "count": 1,
+        "view_type": {
+          "dot": {
+            "color": "green"
+          }
+        },
+        "path": "/home/bookmarks",
+        "is_feature": true
+      }
+    }
+  }
+}

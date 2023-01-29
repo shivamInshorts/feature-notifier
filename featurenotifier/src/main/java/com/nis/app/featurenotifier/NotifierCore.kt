@@ -29,7 +29,7 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData()
+        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -40,13 +40,19 @@ class NotifierCore() {
     }
 
     fun notifierShown(tagName: String) {
-        val nodesData = tagToNodeDataMap.value ?: throw Exception("No config data available")
+        if (tagToNodeDataMap.value == null) return
+        val nodesData = tagToNodeDataMap.value!!
+        val currNode = if (nodesData[tagName] != null) nodesData[tagName]!! else return;
 
-        val nodeDataCount = nodesData[tagName]?.count!!
-        nodesData[tagName]?.count = nodeDataCount - 1
-
-        // TODO decrease count of its path also
+        currNode.count -= 1
         updateData(nodesData)
+
+        if (currNode.isFeature) {
+            val parentPath = currNode.path.split("/").filter { it.isNotEmpty() }
+            for (parent in parentPath) {
+                notifierShown(parent)
+            }
+        }
     }
 
     private fun updateData(nodesData: HashMap<String, NodeData?>) {
@@ -86,7 +92,7 @@ class NotifierCore() {
 
     // A single view type for every node
     private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap.value?.get(tagName)?.viewData?.containsKey(viewType) == true)
+        return if (tagToNodeDataMap.value?.get(tagName)?.viewType?.containsKey(viewType) == true)
             ViewType.fromString(viewType)
         else
             null;
