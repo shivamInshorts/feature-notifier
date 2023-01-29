@@ -15,6 +15,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "FeatureNotifierUsage"
-include ':app'
+include ':sample'
 include ':featurenotifier'
 include ':testapp'
