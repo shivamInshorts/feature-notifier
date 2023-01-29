@@ -2,7 +2,7 @@ package com.nis.app.featurenotifier
 
 import android.util.Log
 import com.google.gson.Gson
-import com.nis.app.featurenotifier.model.NotifierConfig
+import com.nis.app.featurenotifier.model.NotifierData
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -18,9 +18,7 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 
-    val jsonToTest = "{\n" +
-            "    \"notifier_enabled\": true,\n" +
-            "    \"notifier_data\": {\n" +
+    private val jsonToTest = "{\n" +
             "        \"default_view_type\": \"dot\",\n" +
             "        \"nodes\": {\n" +
             "            \"discover\": {\n" +
@@ -42,13 +40,12 @@ class ExampleUnitTest {
             "                }\n" +
             "            }\n" +
             "        }\n" +
-            "    }\n" +
             "}"
 
     private val TAG = "ExampleUnitTest"
     @Test
     fun parseNotifierDataTest() {
-        val response = Gson().fromJson<NotifierConfig>(jsonToTest, NotifierConfig::class.java)
+        val response = Gson().fromJson<NotifierData>(jsonToTest, NotifierData::class.java)
         println(response);
     }
 }

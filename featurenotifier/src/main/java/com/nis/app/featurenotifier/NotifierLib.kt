@@ -2,6 +2,7 @@ package com.nis.app.featurenotifier
 
 import android.content.Context
 
+// Rewrite class implementing builder pattern. Singleton response
 class NotifierLib {
     private var context: Context? = null
     private var props: NotifierPropsInterface? = null
@@ -23,10 +24,11 @@ class NotifierLib {
     fun getNotifierCore() = notifierCore
     
     companion object {
+        // https://medium.com/swlh/android-library-kotlin-creation-access-deploy-problems-fixes-everything-you-want-to-c1a1701f0e8f
         private var INSTANCE: NotifierLib? = null
         private val LOCK = NotifierLib::class.java
 
-        fun getInstance(): NotifierLib? {
+        fun getInstance(): NotifierLib {
             if (INSTANCE == null) {
                 synchronized(LOCK) {
                     if (INSTANCE == null) {
@@ -34,7 +36,7 @@ class NotifierLib {
                     }
                 }
             }
-            return INSTANCE
+            return INSTANCE!!
         }
     }
 }

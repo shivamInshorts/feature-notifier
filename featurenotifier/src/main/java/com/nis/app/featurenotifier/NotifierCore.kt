@@ -1,6 +1,5 @@
 package com.nis.app.featurenotifier
 
-import android.util.AttributeSet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nis.app.featurenotifier.model.NodeData
@@ -16,16 +15,23 @@ class NotifierCore() {
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
 
     private lateinit var properties: NotifierPropsInterface
+    private var isNotifierEnabled: Boolean = false;
 
     init {
-        NotifierLib.getInstance()?.getProperties()?.let { properties = it }
+        NotifierLib.getInstance().getProperties()?.let { properties = it }
         observeConfigData()
     }
 
     private fun observeConfigData() {
+        // will not work now
+        properties.isNotifierEnabled()
+            .subscribe {
+                it?.let { isNotifierEnabled = it }
+            }.dispose()
+
         properties.getNotifierData()
             .subscribe {
-                updateData(it?.data!!.nodes);
+                updateData(it!!.nodes);
             }.dispose()
     }
 
