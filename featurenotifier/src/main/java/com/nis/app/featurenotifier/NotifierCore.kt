@@ -29,7 +29,7 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData()
+        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -92,7 +92,7 @@ class NotifierCore() {
 
     // A single view type for every node
     private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap.value?.get(tagName)?.viewData?.containsKey(viewType) == true)
+        return if (tagToNodeDataMap.value?.get(tagName)?.viewType?.containsKey(viewType) == true)
             ViewType.fromString(viewType)
         else
             null;
