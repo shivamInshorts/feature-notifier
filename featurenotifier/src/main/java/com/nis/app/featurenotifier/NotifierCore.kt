@@ -35,8 +35,13 @@ class NotifierCore() {
             }.dispose()
     }
 
-    fun canShowNotifierHere(tagName: String): LiveData<Boolean>? {
-        return tagNameToBooleanMap[tagName];
+    fun isTagValid(tagName: String): Boolean {
+        return true;
+    }
+
+    // TODO make the method return non nullable, create a function isTagNameValid?
+    fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(false);
     }
 
     fun notifierShown(tagName: String) {
@@ -73,7 +78,7 @@ class NotifierCore() {
         // check if dot notifier is available in data else return null
         return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
 //            val attrs = AttributeSet;
-            DotNotifierView(NotifierLib.getInstance()?.getContext()!!)
+            DotNotifierView(NotifierLib.getInstance().getContext()!!)
         } else
             null
     }
