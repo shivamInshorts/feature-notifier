@@ -35,8 +35,13 @@ class NotifierCore() {
             }.dispose()
     }
 
-    fun canShowNotifierHere(tagName: String): LiveData<Boolean>? {
-        return tagNameToBooleanMap[tagName];
+    fun isTagValid(tagName: String): Boolean {
+        return true;
+    }
+
+    // TODO make the method return non nullable, create a function isTagNameValid?
+    fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(false);
     }
 
     fun notifierShown(tagName: String) {

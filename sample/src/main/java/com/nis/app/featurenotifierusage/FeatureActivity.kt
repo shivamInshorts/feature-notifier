@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.nis.app.featurenotifier.NotifierCore
 import com.nis.app.featurenotifier.NotifierLib
 
@@ -19,12 +18,12 @@ class FeatureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature)
-        NotifierLib.getInstance()?.getNotifierCore()?.let { notifierCore = it }
+        NotifierLib.getInstance().getNotifierCore()?.let { notifierCore = it }
 
         val layout = findViewById<FrameLayout>(R.id.root)
         val dotView = notifierCore.getDotNotifierForTag(tagName)
 
-        notifierCore.canShowNotifierHere(tagName)?.observe(this) {
+        notifierCore.canShowNotifierHere(tagName).observe(this) {
             Log.d(TAG, "onCreate: ")
             Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             dotView?.let { view ->

@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val layout = findViewById<FrameLayout>(R.id.lol)
         val dotView = notifierCore.getDotNotifierForTag(tagName)
 
-        notifierCore.canShowNotifierHere(tagName)?.observe(this) {
+        notifierCore.canShowNotifierHere(tagName).observe(this) {
             Log.d(TAG, "onCreate: ")
             Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             dotView?.let { view ->
