@@ -1,5 +1,6 @@
 package com.nis.app.featurenotifierusage
 
+import android.app.Application
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -8,7 +9,7 @@ import com.nis.app.featurenotifier.model.NotifierData
 import com.nis.app.featurenotifier.utils.readJsonAsset
 import io.reactivex.Observable
 
-class NotifierProps : NotifierPropsInterface {
+class NotifierProps(private val context: Application) : NotifierPropsInterface {
 
     private val TAG = "NotifierProps"
 
@@ -24,5 +25,9 @@ class NotifierProps : NotifierPropsInterface {
 
     override fun isNotifierEnabled(): Observable<Boolean?> {
         return Observable.just(true);
+    }
+
+    override fun getApplicationContext(): Application {
+        return context;
     }
 }

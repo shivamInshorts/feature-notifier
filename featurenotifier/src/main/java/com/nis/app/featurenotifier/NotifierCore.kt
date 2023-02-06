@@ -29,7 +29,7 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
+        properties.getNotifierData(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -78,7 +78,7 @@ class NotifierCore() {
         // check if dot notifier is available in data else return null
         return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
 //            val attrs = AttributeSet;
-            DotNotifierView(NotifierLib.getInstance().getContext()!!)
+            DotNotifierView(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
         } else
             null
     }
