@@ -1,42 +1,33 @@
 package com.nis.app.featurenotifier
 
+import android.app.Application
 import android.content.Context
+import android.util.Log
 
-// Rewrite class implementing builder pattern. Singleton response
 class NotifierLib {
-    private var context: Context? = null
     private var props: NotifierPropsInterface? = null
     private var notifierCore: NotifierCore? = null
 
-    fun build(context: Context, props: NotifierPropsInterface): NotifierLib {
-        this.context = context
-        if (this.props == null)
-            this.props = props
-        if (notifierCore == null)
-            notifierCore = NotifierCore()
-        return this
-    }
+    class Builder {
+        private var propsInterface: NotifierPropsInterface? = null
 
-    fun getProperties() = props
+        fun setNotifierProp(props: NotifierPropsInterface): Builder {
+            this.propsInterface = props;
+            return this
+        }
 
-    fun getContext() = context
-
-    fun getNotifierCore() = notifierCore
-    
-    companion object {
-        // https://medium.com/swlh/android-library-kotlin-creation-access-deploy-problems-fixes-everything-you-want-to-c1a1701f0e8f
-        private var INSTANCE: NotifierLib? = null
-        private val LOCK = NotifierLib::class.java
-
-        fun getInstance(): NotifierLib {
-            if (INSTANCE == null) {
-                synchronized(LOCK) {
-                    if (INSTANCE == null) {
-                        INSTANCE = NotifierLib()
-                    }
-                }
+        fun create(app: Application?): NotifierLib {
+            val lib = NotifierLib();
+            try {
+                lib.props = this.propsInterface;
+                lib.notifierCore = NotifierCore(lib);
+            } catch (e: Exception) {
+                Log.e("NotifierLib", "create: " + e.message)
             }
-            return INSTANCE!!
+            return lib;
         }
     }
+
+    fun getProperties() = props!!
+    
 }

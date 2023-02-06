@@ -1,5 +1,6 @@
 package com.nis.app.featurenotifier
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nis.app.featurenotifier.model.NodeData
@@ -8,17 +9,15 @@ import com.nis.app.featurenotifier.views.DotNotifierView
 import com.nis.app.featurenotifier.views.NewNotifierView
 import com.nis.app.featurenotifier.views.NumberNotifierView
 
-class NotifierCore() {
+class NotifierCore(private val notifierLib: NotifierLib) {
+    private val properties: NotifierPropsInterface = notifierLib.getProperties();
 
     // map storing tagName(String) to node data(NodeData)
     private val tagToNodeDataMap: MutableLiveData<HashMap<String, NodeData?>> = MutableLiveData();
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
-
-    private lateinit var properties: NotifierPropsInterface
     private var isNotifierEnabled: Boolean = false;
 
     init {
-        NotifierLib.getInstance().getProperties()?.let { properties = it }
         observeConfigData()
     }
 
@@ -29,7 +28,7 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
+        properties.getNotifierData(properties.getApplicationContext())
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -78,7 +77,7 @@ class NotifierCore() {
         // check if dot notifier is available in data else return null
         return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
 //            val attrs = AttributeSet;
-            DotNotifierView(NotifierLib.getInstance().getContext()!!)
+            DotNotifierView(properties.getApplicationContext())
         } else
             null
     }
@@ -106,6 +105,7 @@ class NotifierCore() {
     // private method of implementation
     companion object {
         private const val TAG = "NotifierCore"
+
     }
 
 }

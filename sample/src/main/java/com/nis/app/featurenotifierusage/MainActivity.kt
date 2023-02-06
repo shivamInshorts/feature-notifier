@@ -20,9 +20,7 @@ class MainActivity : AppCompatActivity() {
         val tagName = "settings";
 
         // goes to app class
-        NotifierLib.getInstance().build(applicationContext, NotifierProps())
-
-        NotifierLib.getInstance().getNotifierCore()?.let { notifierCore = it }
+        NotifierLib.Builder().setNotifierProp(NotifierProps(application)).create(application);
 
         val layout = findViewById<FrameLayout>(R.id.lol)
         val dotView = notifierCore.getDotNotifierForTag(tagName)
