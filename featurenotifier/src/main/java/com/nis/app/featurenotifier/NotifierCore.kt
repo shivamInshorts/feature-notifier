@@ -9,8 +9,8 @@ import com.nis.app.featurenotifier.views.DotNotifierView
 import com.nis.app.featurenotifier.views.NewNotifierView
 import com.nis.app.featurenotifier.views.NumberNotifierView
 
-class NotifierCore() {
-    private val properties: NotifierPropsInterface = NotifierLib.getInstance().getProperties();
+class NotifierCore(private val notifierLib: NotifierLib) {
+    private val properties: NotifierPropsInterface = notifierLib.getProperties();
 
     // map storing tagName(String) to node data(NodeData)
     private val tagToNodeDataMap: MutableLiveData<HashMap<String, NodeData?>> = MutableLiveData();

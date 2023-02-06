@@ -17,10 +17,10 @@ class NotifierLib {
         }
 
         fun create(app: Application?): NotifierLib {
-            val lib = getInstance();
+            val lib = NotifierLib();
             try {
                 lib.props = this.propsInterface;
-                lib.notifierCore = NotifierCore();
+                lib.notifierCore = NotifierCore(lib);
             } catch (e: Exception) {
                 Log.e("NotifierLib", "create: " + e.message)
             }
@@ -29,22 +29,5 @@ class NotifierLib {
     }
 
     fun getProperties() = props!!
-
-    fun getNotifierCore() = notifierCore
-
-    companion object{
-        private var INSTANCE: NotifierLib? = null
-        private val LOCK = NotifierLib::class.java
-
-        fun getInstance(): NotifierLib {
-            if (INSTANCE == null) {
-                synchronized(LOCK) {
-                    if (INSTANCE == null) {
-                        INSTANCE = NotifierLib()
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
+    
 }
