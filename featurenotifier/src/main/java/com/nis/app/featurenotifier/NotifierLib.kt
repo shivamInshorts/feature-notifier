@@ -4,22 +4,17 @@ import android.content.Context
 
 // Rewrite class implementing builder pattern. Singleton response
 class NotifierLib {
-    private var context: Context? = null
-    private var props: NotifierPropsInterface? = null
+    private lateinit var props: NotifierPropsInterface
     private var notifierCore: NotifierCore? = null
 
-    fun build(context: Context, props: NotifierPropsInterface): NotifierLib {
-        this.context = context
-        if (this.props == null)
-            this.props = props
+    fun build(props: NotifierPropsInterface): NotifierLib {
+        this.props = props
         if (notifierCore == null)
             notifierCore = NotifierCore()
         return this
     }
 
     fun getProperties() = props
-
-    fun getContext() = context
 
     fun getNotifierCore() = notifierCore
     

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val tagName = "settings";
 
         // goes to app class
-        NotifierLib.getInstance().build(applicationContext, NotifierProps())
+        NotifierLib.getInstance().build(NotifierProps(application))
 
         NotifierLib.getInstance().getNotifierCore()?.let { notifierCore = it }
 
