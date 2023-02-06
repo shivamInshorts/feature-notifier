@@ -13,7 +13,7 @@ import com.nis.app.featurenotifier.NotifierLib
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-    private lateinit var notifierCore: NotifierCore
+    private var notifierCore: NotifierCore? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,10 +22,12 @@ class MainActivity : AppCompatActivity() {
         // goes to app class
         NotifierLib.Builder().setNotifierProp(NotifierProps(application)).create(application);
 
-        val layout = findViewById<FrameLayout>(R.id.lol)
-        val dotView = notifierCore.getDotNotifierForTag(tagName)
 
-        notifierCore.canShowNotifierHere(tagName).observe(this) {
+        notifierCore = NotifierLib.getInstance().getNotifierCore();
+        val layout = findViewById<FrameLayout>(R.id.lol)
+        val dotView = notifierCore?.getDotNotifierForTag(tagName)
+
+        notifierCore?.canShowNotifierHere(tagName)?.observe(this) {
             Log.d(TAG, "onCreate: ")
             Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             dotView?.let { view ->
