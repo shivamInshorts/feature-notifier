@@ -1,6 +1,5 @@
 package com.nis.app.featurenotifier
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nis.app.featurenotifier.model.NodeData
@@ -9,15 +8,17 @@ import com.nis.app.featurenotifier.views.DotNotifierView
 import com.nis.app.featurenotifier.views.NewNotifierView
 import com.nis.app.featurenotifier.views.NumberNotifierView
 
-class NotifierCore(private val notifierLib: NotifierLib) {
-    private val properties: NotifierPropsInterface = notifierLib.getProperties();
+class NotifierCore() {
 
     // map storing tagName(String) to node data(NodeData)
     private val tagToNodeDataMap: MutableLiveData<HashMap<String, NodeData?>> = MutableLiveData();
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
+
+    private lateinit var properties: NotifierPropsInterface
     private var isNotifierEnabled: Boolean = false;
 
     init {
+        NotifierLib.getInstance().getProperties()?.let { properties = it }
         observeConfigData()
     }
 
@@ -28,7 +29,7 @@ class NotifierCore(private val notifierLib: NotifierLib) {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(properties.getApplicationContext())
+        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -77,7 +78,7 @@ class NotifierCore(private val notifierLib: NotifierLib) {
         // check if dot notifier is available in data else return null
         return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
 //            val attrs = AttributeSet;
-            DotNotifierView(properties.getApplicationContext())
+            DotNotifierView(NotifierLib.getInstance().getContext()!!)
         } else
             null
     }
@@ -105,7 +106,6 @@ class NotifierCore(private val notifierLib: NotifierLib) {
     // private method of implementation
     companion object {
         private const val TAG = "NotifierCore"
-
     }
 
 }

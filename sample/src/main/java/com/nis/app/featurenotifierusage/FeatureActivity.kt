@@ -18,7 +18,7 @@ class FeatureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature)
-        NotifierLib.Builder().getNotifierCore()?.let { notifierCore = it }
+        NotifierLib.getInstance().getNotifierCore()?.let { notifierCore = it }
 
         val layout = findViewById<FrameLayout>(R.id.root)
         val dotView = notifierCore.getDotNotifierForTag(tagName)
