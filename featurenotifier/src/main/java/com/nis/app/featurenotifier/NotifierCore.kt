@@ -10,15 +10,14 @@ import com.nis.app.featurenotifier.views.NumberNotifierView
 
 class NotifierCore() {
 
-    // map storing tagName(String) to node data(NodeData)
-    private val tagToNodeDataMap: MutableLiveData<HashMap<String, NodeData?>> = MutableLiveData();
+    private var tagToNodeDataMap: HashMap<String, NodeData?>? = null;
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
 
     private lateinit var properties: NotifierPropsInterface
     private var isNotifierEnabled: Boolean = false;
 
     init {
-        NotifierLib.getInstance().getProperties()?.let { properties = it }
+        NotifierLib.getInstance().getProperties().let { properties = it }
         observeConfigData()
     }
 
@@ -29,19 +28,24 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
+        properties.getNotifierData(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
     }
 
-    fun canShowNotifierHere(tagName: String): LiveData<Boolean>? {
-        return tagNameToBooleanMap[tagName];
+    fun isTagValid(tagName: String): Boolean {
+        return tagNameToBooleanMap.containsKey(tagName);
+    }
+
+    // TODO make the method return non nullable, create a function isTagNameValid?
+    fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(false);
     }
 
     fun notifierShown(tagName: String) {
-        if (tagToNodeDataMap.value == null) return
-        val nodesData = tagToNodeDataMap.value!!
+        if (tagToNodeDataMap == null) return
+        val nodesData = tagToNodeDataMap!!
         val currNode = if (nodesData[tagName] != null) nodesData[tagName]!! else return;
 
         currNode.count -= 1
@@ -56,7 +60,7 @@ class NotifierCore() {
     }
 
     private fun updateData(nodesData: HashMap<String, NodeData?>) {
-        tagToNodeDataMap.value = nodesData;
+        tagToNodeDataMap = nodesData;
         for (tag in nodesData.keys) {
             if (tagNameToBooleanMap.containsKey(tag)) {
                 tagNameToBooleanMap[tag]!!.postValue(nodesData[tag]?.count!! > 0)
@@ -73,7 +77,7 @@ class NotifierCore() {
         // check if dot notifier is available in data else return null
         return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
 //            val attrs = AttributeSet;
-            DotNotifierView(NotifierLib.getInstance()?.getContext()!!)
+            DotNotifierView(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
         } else
             null
     }
@@ -92,7 +96,7 @@ class NotifierCore() {
 
     // A single view type for every node
     private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap.value?.get(tagName)?.viewType?.containsKey(viewType) == true)
+        return if (tagToNodeDataMap?.get(tagName)?.viewType?.containsKey(viewType) == true)
             ViewType.fromString(viewType)
         else
             null;
