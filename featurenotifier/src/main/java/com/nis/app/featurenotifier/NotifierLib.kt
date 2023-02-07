@@ -17,12 +17,13 @@ class NotifierLib {
     fun getProperties() = props
 
     fun getNotifierCore() = notifierCore
-    
+
     companion object {
         // https://medium.com/swlh/android-library-kotlin-creation-access-deploy-problems-fixes-everything-you-want-to-c1a1701f0e8f
         private var INSTANCE: NotifierLib? = null
         private val LOCK = NotifierLib::class.java
 
+        @JvmStatic
         fun getInstance(): NotifierLib {
             if (INSTANCE == null) {
                 synchronized(LOCK) {
