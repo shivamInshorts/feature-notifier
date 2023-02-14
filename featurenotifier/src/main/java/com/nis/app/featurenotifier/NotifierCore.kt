@@ -1,12 +1,13 @@
 package com.nis.app.featurenotifier
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nis.app.featurenotifier.model.NodeData
-import com.nis.app.featurenotifier.views.BannerNotifierView
-import com.nis.app.featurenotifier.views.DotNotifierView
-import com.nis.app.featurenotifier.views.NewNotifierView
-import com.nis.app.featurenotifier.views.NumberNotifierView
+import com.nis.app.featurenotifier.views.taptarget.DotNotifierView
+import com.nis.app.featurenotifier.views.taptarget.NewNotifierView
+import com.nis.app.featurenotifier.views.taptarget.NumberNotifierView
+import com.nis.app.featurenotifier.views.tooltip.Tooltip
 
 class NotifierCore() {
 
@@ -29,14 +30,23 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getContext()!!)
+        properties.getNotifierData(
+            NotifierLib.getInstance().getProperties().getApplicationContext()!!
+        )
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
     }
 
-    fun canShowNotifierHere(tagName: String): LiveData<Boolean>? {
-        return tagNameToBooleanMap[tagName];
+    fun isTagValid(tagName: String): Boolean {
+        return tagNameToBooleanMap.containsKey(tagName);
+    }
+
+    // TODO make the method return non nullable, create a function isTagNameValid?
+    fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(
+            false
+        );
     }
 
     fun notifierShown(tagName: String) {
@@ -78,9 +88,34 @@ class NotifierCore() {
             null
     }
 
-    private fun getBannerNotifierForTag(tagName: String): BannerNotifierView? {
-        TODO("Not yet implemented")
+    fun getTooltipNotifierForTag(anchorView: View?, tagName: String): Tooltip? {
+        return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
+            if (anchorView != null) {
+                getTooltipBuilderForTag(anchorView).create();
+            } else
+                getTooltipBuilderForTag().create();
+        } else
+            null
     }
+
+    private fun getTooltipBuilderForTag(view: View? = null): Tooltip.Builder {
+        val tooltipBuilder =
+            Tooltip.Builder(properties.getApplicationContext()!!.applicationContext);
+        if (view != null) {
+            tooltipBuilder.anchor(view, 0, 0, false)
+        }
+//            .text("")
+//            .styleId()
+//            .typeface(typeface)
+//            .maxWidth(metrics.widthPixels / 2)
+//            .arrow(arrow)
+//            .floatingAnimation(animation)
+//            .closePolicy(closePolicy)
+//            .showDuration(showDuration)
+//            .overlay(overlay)
+        return tooltipBuilder;
+    }
+
 
     private fun getNewNotifierForTag(tagName: String): NewNotifierView? {
         TODO("Not yet implemented")

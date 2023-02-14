@@ -1,4 +1,4 @@
-package com.nis.app.featurenotifier.views
+package com.nis.app.featurenotifier.views.taptarget
 
 import android.annotation.SuppressLint
 import android.content.Context

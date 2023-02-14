@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ToolTipLayoutDefaultStyle">
+        <item name="ttv_padding">@dimen/ttv_default_padding</item>
+        <item name="ttv_strokeColor">@android:color/transparent</item>
+        <item name="ttv_backgroundColor">?attr/colorAccent</item>
+        <item name="ttv_strokeWeight">@dimen/ttv_default_stroke_weight</item>
+        <item name="ttv_cornerRadius">@dimen/ttv_default_corner_radius</item>
+        <item name="ttv_arrowRatio">1.4</item>
+        <item name="ttv_overlayStyle">@style/ToolTipOverlayDefaultStyle</item>
+        <item name="ttv_animationStyle">@style/ToolTipAnimation</item>
+        <item name="ttv_textStyle">@style/ToolTipTextStyle</item>
+    </style>
+
+    <style name="ToolTipTextStyle" parent="TextAppearance.AppCompat.Small.Inverse">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:autoLink">all</item>
+        <item name="android:linksClickable">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:textColorLink">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:gravity">start|top</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/ttv_default_elevation</item>
+        <item name="android:translationZ" tools:ignore="NewApi">@dimen/ttv_default_elevation</item>
+    </style>
+
+    <style name="ToolTipOverlayDefaultStyle">
+        <item name="android:color">?attr/colorAccent</item>
+        <item name="ttv_repeatCount">99</item>
+        <item name="ttv_duration">600</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="ToolTipAnimation">
+        <item name="android:windowEnterAnimation">@anim/ttv_tooltip_anim_enter</item>
+        <item name="android:windowExitAnimation">@anim/ttv_tooltip_anim_exit</item>
+    </style>
+
+</resources>
