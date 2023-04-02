@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         button?.setOnClickListener {
-            startActivity(Intent(this, FeatureActivity::class.java));
+            tooltipView?.dismiss()
         }
     }
 }
