@@ -7,11 +7,12 @@ import com.nis.app.featurenotifier.model.NodeData
 import com.nis.app.featurenotifier.views.taptarget.DotNotifierView
 import com.nis.app.featurenotifier.views.taptarget.NewNotifierView
 import com.nis.app.featurenotifier.views.taptarget.NumberNotifierView
+import com.nis.app.featurenotifier.views.tooltip.ClosePolicy
 import com.nis.app.featurenotifier.views.tooltip.Tooltip
 
 class NotifierCore {
 
-    private var tagToNodeDataMap: HashMap<String, NodeData?>? = null;
+    private val tagToNodeDataMap: HashMap<String, NodeData?> = hashMapOf();
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
 
     private lateinit var properties: NotifierPropsInterface
@@ -49,8 +50,7 @@ class NotifierCore {
     }
 
     fun notifierShown(tagName: String) {
-        if (tagToNodeDataMap == null) return
-        val nodesData = tagToNodeDataMap!!
+        val nodesData = tagToNodeDataMap
         val currNode = if (nodesData[tagName] != null) nodesData[tagName]!! else return;
 
         currNode.count -= 1
@@ -65,7 +65,7 @@ class NotifierCore {
     }
 
     private fun updateData(nodesData: HashMap<String, NodeData?>) {
-        tagToNodeDataMap = nodesData;
+        tagToNodeDataMap.putAll(nodesData)
         for (tag in nodesData.keys) {
             if (tagNameToBooleanMap.containsKey(tag)) {
                 tagNameToBooleanMap[tag]!!.postValue(nodesData[tag]?.count!! > 0)
@@ -79,39 +79,39 @@ class NotifierCore {
     }
 
     fun getDotNotifierForTag(tagName: String): DotNotifierView? {
-        // check if dot notifier is available in data else return null
-        return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
-//            val attrs = AttributeSet;
+        return if (viewTypeForTag(tagName, ViewType.DOT.string())) {
             DotNotifierView(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
         } else
             null
     }
 
     fun getTooltipNotifierForTag(anchorView: View?, tagName: String): Tooltip? {
-        return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
+        return if (viewTypeForTag(tagName, ViewType.DIALOGUE.string())) {
             if (anchorView != null) {
-                getTooltipBuilderForTag(anchorView).create();
+                getTooltipBuilderForTag(tagName, anchorView).create();
             } else
-                getTooltipBuilderForTag().create();
+                getTooltipBuilderForTag(tagName).create();
         } else
             null
     }
 
-    private fun getTooltipBuilderForTag(view: View? = null): Tooltip.Builder {
+    private fun getTooltipBuilderForTag(tagName: String, view: View? = null): Tooltip.Builder {
         val tooltipBuilder =
             Tooltip.Builder(properties.getApplicationContext()!!.applicationContext);
         if (view != null) {
             tooltipBuilder.anchor(view, 0, 0, false)
         }
-//            .text("")
-//            .styleId()
-//            .typeface(typeface)
-//            .maxWidth(metrics.widthPixels / 2)
-//            .arrow(arrow)
-//            .floatingAnimation(animation)
-//            .closePolicy(closePolicy)
-//            .showDuration(showDuration)
-//            .overlay(overlay)
+        val tooltipViewData = tagToNodeDataMap[tagName]?.viewType?.get(ViewType.DIALOGUE.string())
+        if (tooltipViewData != null) {
+            tooltipBuilder.text = tooltipViewData.text
+            tooltipBuilder.maxWidth = tooltipViewData.maxWidth;
+            tooltipBuilder.showArrow = tooltipViewData.showArrow;
+            tooltipBuilder.overlay = tooltipViewData.overlay;
+            tooltipBuilder.showDuration = tooltipViewData.duration;
+            tooltipBuilder.followAnchor = tooltipViewData.followAnchor;
+            tooltipBuilder.activateDelay = tooltipViewData.activateDelay;
+            tooltipBuilder.closePolicy = ClosePolicy.Builder().fromInt(tooltipViewData.closePolicy);
+        }
         return tooltipBuilder;
     }
 
@@ -125,11 +125,8 @@ class NotifierCore {
     }
 
     // A single view type for every node
-    private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap?.get(tagName)?.viewType?.containsKey(viewType) == true)
-            ViewType.fromString(viewType)
-        else
-            null;
+    private fun viewTypeForTag(tagName: String, viewType: String): Boolean {
+        return tagToNodeDataMap[tagName]?.viewType?.containsKey(viewType) == true;
     }
 
     // private method of implementation

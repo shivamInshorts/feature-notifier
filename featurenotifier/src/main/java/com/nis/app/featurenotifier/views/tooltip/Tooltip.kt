@@ -8,8 +8,8 @@ import android.graphics.*
 import android.os.Handler
 import android.os.IBinder
 import android.text.Spannable
+import android.util.JsonToken
 import android.view.*
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
@@ -994,6 +994,17 @@ class ClosePolicy internal constructor(private val policy: Int) {
 
         fun clear() {
             policy = NONE
+        }
+
+        fun fromInt(s: Int): ClosePolicy {
+            var type = ClosePolicy(NONE);
+            return when (s) {
+                NONE -> ClosePolicy(NONE)
+                TOUCH_INSIDE -> ClosePolicy(TOUCH_INSIDE)
+                TOUCH_OUTSIDE -> ClosePolicy(TOUCH_OUTSIDE)
+                CONSUME -> ClosePolicy(CONSUME)
+                else -> ClosePolicy(NONE);
+            }
         }
 
         fun build() = ClosePolicy(policy)
