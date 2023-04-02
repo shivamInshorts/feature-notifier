@@ -1,4 +1,4 @@
-package com.nis.app.featurenotifier.views
+package com.nis.app.featurenotifier.views.taptarget
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,9 +13,10 @@ import android.view.ViewOutlineProvider
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import com.nis.app.featurenotifier.R
+import com.nis.app.featurenotifier.views.CustomView
 import kotlin.math.min
 
-class DotNotifierView : AppCompatImageView {
+class DotNotifierView : AppCompatImageView, CustomView {
 
     private val mBitmapPaint = Paint()
     private val mImageAlpha: Int = DEFAULT_IMAGE_ALPHA

@@ -5,4 +5,31 @@
         <attr name="dnv_blink_duration" format="integer" />
         <attr name="dnv_blink_length" format="dimension" />
     </declare-styleable>
+
+    <!-- default style for theme -->
+    <attr name="ttv_defaultStyle" format="reference" />
+
+    <!-- default style -->
+    <declare-styleable name="TooltipLayout">
+        <attr name="ttv_padding" format="dimension" />
+        <attr name="ttv_strokeColor" format="color" />
+        <attr name="ttv_backgroundColor" format="color" />
+        <attr name="ttv_strokeWeight" format="dimension" />
+        <attr name="ttv_cornerRadius" format="dimension" />
+        <attr name="ttv_arrowRatio" format="float" />
+        <attr name="ttv_overlayStyle" format="reference" />
+        <attr name="ttv_font" format="string" />
+        <attr name="ttv_animationStyle" format="reference" />
+
+        <!-- text view style -->
+        <attr name="ttv_textStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="TooltipOverlay">
+        <attr name="android:color" />
+        <attr name="android:alpha" />
+        <attr name="ttv_repeatCount" format="integer" />
+        <attr name="ttv_duration" format="integer" />
+        <attr name="android:layout_margin" />
+    </declare-styleable>
 </resources>

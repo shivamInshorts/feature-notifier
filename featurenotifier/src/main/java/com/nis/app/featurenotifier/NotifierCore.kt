@@ -1,16 +1,19 @@
 package com.nis.app.featurenotifier
 
+import android.content.Context
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nis.app.featurenotifier.model.NodeData
-import com.nis.app.featurenotifier.views.BannerNotifierView
-import com.nis.app.featurenotifier.views.DotNotifierView
-import com.nis.app.featurenotifier.views.NewNotifierView
-import com.nis.app.featurenotifier.views.NumberNotifierView
+import com.nis.app.featurenotifier.views.taptarget.DotNotifierView
+import com.nis.app.featurenotifier.views.taptarget.NewNotifierView
+import com.nis.app.featurenotifier.views.taptarget.NumberNotifierView
+import com.nis.app.featurenotifier.views.tooltip.ClosePolicy
+import com.nis.app.featurenotifier.views.tooltip.Tooltip
 
-class NotifierCore() {
+class NotifierCore {
 
-    private var tagToNodeDataMap: HashMap<String, NodeData?>? = null;
+    private val tagToNodeDataMap: HashMap<String, NodeData?> = hashMapOf();
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
 
     private lateinit var properties: NotifierPropsInterface
@@ -28,7 +31,9 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
+        properties.getNotifierData(
+            NotifierLib.getInstance().getProperties().getApplicationContext()!!
+        )
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -40,12 +45,13 @@ class NotifierCore() {
 
     // TODO make the method return non nullable, create a function isTagNameValid?
     fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
-        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(false);
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(
+            false
+        );
     }
 
     fun notifierShown(tagName: String) {
-        if (tagToNodeDataMap == null) return
-        val nodesData = tagToNodeDataMap!!
+        val nodesData = tagToNodeDataMap
         val currNode = if (nodesData[tagName] != null) nodesData[tagName]!! else return;
 
         currNode.count -= 1
@@ -60,7 +66,7 @@ class NotifierCore() {
     }
 
     private fun updateData(nodesData: HashMap<String, NodeData?>) {
-        tagToNodeDataMap = nodesData;
+        tagToNodeDataMap.putAll(nodesData)
         for (tag in nodesData.keys) {
             if (tagNameToBooleanMap.containsKey(tag)) {
                 tagNameToBooleanMap[tag]!!.postValue(nodesData[tag]?.count!! > 0)
@@ -74,17 +80,42 @@ class NotifierCore() {
     }
 
     fun getDotNotifierForTag(tagName: String): DotNotifierView? {
-        // check if dot notifier is available in data else return null
-        return if (viewTypeForTag(tagName, ViewType.DOT.string()) == ViewType.DOT) {
-//            val attrs = AttributeSet;
+        return if (viewTypeForTag(tagName, ViewType.DOT.string())) {
             DotNotifierView(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
         } else
             null
     }
 
-    private fun getBannerNotifierForTag(tagName: String): BannerNotifierView? {
-        TODO("Not yet implemented")
+    fun getTooltipNotifierForTag(anchorView: View?, tagName: String, context: Context): Tooltip? {
+        return if (viewTypeForTag(tagName, ViewType.DIALOGUE.string())) {
+            if (anchorView != null) {
+                getTooltipBuilderForTag(tagName, context, anchorView).create();
+            } else
+                getTooltipBuilderForTag(tagName, context).create();
+        } else
+            null
     }
+
+    private fun getTooltipBuilderForTag(tagName: String, context: Context ,view: View? = null): Tooltip.Builder {
+        val tooltipBuilder =
+            Tooltip.Builder(context);
+        if (view != null) {
+            tooltipBuilder.anchor(view, 0, 0, false)
+        }
+        val tooltipViewData = tagToNodeDataMap[tagName]?.viewType?.get(ViewType.DIALOGUE.string())
+        if (tooltipViewData != null) {
+            tooltipBuilder.text = tooltipViewData.text
+            tooltipBuilder.maxWidth = tooltipViewData.maxWidth;
+            tooltipBuilder.showArrow = tooltipViewData.showArrow;
+            tooltipBuilder.overlay = tooltipViewData.overlay;
+            tooltipBuilder.showDuration = tooltipViewData.duration;
+            tooltipBuilder.followAnchor = tooltipViewData.followAnchor;
+            tooltipBuilder.activateDelay = tooltipViewData.activateDelay;
+            tooltipBuilder.closePolicy = ClosePolicy.Builder().fromInt(tooltipViewData.closePolicy);
+        }
+        return tooltipBuilder;
+    }
+
 
     private fun getNewNotifierForTag(tagName: String): NewNotifierView? {
         TODO("Not yet implemented")
@@ -95,11 +126,8 @@ class NotifierCore() {
     }
 
     // A single view type for every node
-    private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap?.get(tagName)?.viewType?.containsKey(viewType) == true)
-            ViewType.fromString(viewType)
-        else
-            null;
+    private fun viewTypeForTag(tagName: String, viewType: String): Boolean {
+        return tagToNodeDataMap[tagName]?.viewType?.containsKey(viewType) == true;
     }
 
     // private method of implementation

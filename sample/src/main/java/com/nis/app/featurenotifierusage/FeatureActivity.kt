@@ -13,7 +13,6 @@ import com.nis.app.featurenotifier.NotifierLib
 class FeatureActivity : AppCompatActivity() {
     val tagName = "settings"
     private lateinit var notifierCore: NotifierCore
-    private val TAG = "FeatureActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +23,7 @@ class FeatureActivity : AppCompatActivity() {
         val dotView = notifierCore.getDotNotifierForTag(tagName)
 
         notifierCore.canShowNotifierHere(tagName).observe(this) {
-            Log.d(TAG, "onCreate: ")
+            Log.d(Companion.TAG, "onCreate: ")
             Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             dotView?.let { view ->
                 view.layoutParams = ViewGroup.LayoutParams(28, 28)
@@ -37,5 +36,9 @@ class FeatureActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button).setOnClickListener { notifierCore.notifierShown(tagName) }
 
+    }
+
+    companion object {
+        private const val TAG = "FeatureActivity"
     }
 }
