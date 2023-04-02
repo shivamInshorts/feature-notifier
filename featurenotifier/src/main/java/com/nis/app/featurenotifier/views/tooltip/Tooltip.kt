@@ -26,6 +26,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.setPadding
 import com.nis.app.featurenotifier.R
+import com.nis.app.featurenotifier.views.CustomView
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
@@ -47,7 +48,7 @@ import java.util.*
  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
  * OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class Tooltip private constructor(private val context: Context, builder: Builder) {
+class Tooltip private constructor(private val context: Context, builder: Builder): CustomView {
 
     private val windowManager: WindowManager =
             context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

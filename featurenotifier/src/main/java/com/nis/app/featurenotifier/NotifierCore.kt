@@ -9,7 +9,7 @@ import com.nis.app.featurenotifier.views.taptarget.NewNotifierView
 import com.nis.app.featurenotifier.views.taptarget.NumberNotifierView
 import com.nis.app.featurenotifier.views.tooltip.Tooltip
 
-class NotifierCore() {
+class NotifierCore {
 
     private var tagToNodeDataMap: HashMap<String, NodeData?>? = null;
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();

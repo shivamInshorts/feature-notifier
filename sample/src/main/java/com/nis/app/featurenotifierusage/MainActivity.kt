@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.nis.app.featurenotifier.NotifierCore
 import com.nis.app.featurenotifier.NotifierLib
+import io.reactivex.Observable
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"

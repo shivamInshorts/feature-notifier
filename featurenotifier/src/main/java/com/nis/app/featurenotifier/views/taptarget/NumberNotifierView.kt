@@ -1,4 +1,6 @@
 package com.nis.app.featurenotifier.views.taptarget
 
-class NumberNotifierView {
+import com.nis.app.featurenotifier.views.CustomView
+
+class NumberNotifierView: CustomView {
 }
