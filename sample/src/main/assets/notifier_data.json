@@ -14,8 +14,9 @@
       "settings": {
         "count": 1,
         "view_type": {
-          "dot": {
-            "color": "blue"
+          "tooltip": {
+            "text": "Show me a tooltip",
+            "max_width": 400
           }
         },
         "path": "/home/discover"

@@ -1,5 +1,6 @@
 package com.nis.app.featurenotifier
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -85,19 +86,19 @@ class NotifierCore {
             null
     }
 
-    fun getTooltipNotifierForTag(anchorView: View?, tagName: String): Tooltip? {
+    fun getTooltipNotifierForTag(anchorView: View?, tagName: String, context: Context): Tooltip? {
         return if (viewTypeForTag(tagName, ViewType.DIALOGUE.string())) {
             if (anchorView != null) {
-                getTooltipBuilderForTag(tagName, anchorView).create();
+                getTooltipBuilderForTag(tagName, context, anchorView).create();
             } else
-                getTooltipBuilderForTag(tagName).create();
+                getTooltipBuilderForTag(tagName, context).create();
         } else
             null
     }
 
-    private fun getTooltipBuilderForTag(tagName: String, view: View? = null): Tooltip.Builder {
+    private fun getTooltipBuilderForTag(tagName: String, context: Context ,view: View? = null): Tooltip.Builder {
         val tooltipBuilder =
-            Tooltip.Builder(properties.getApplicationContext()!!.applicationContext);
+            Tooltip.Builder(context);
         if (view != null) {
             tooltipBuilder.anchor(view, 0, 0, false)
         }
