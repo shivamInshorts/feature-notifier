@@ -21,21 +21,20 @@ class FeatureActivity : AppCompatActivity() {
         NotifierLib.getInstance().getNotifierCore()?.let { notifierCore = it }
 
         val layout = findViewById<FrameLayout>(R.id.root)
-        val dotView = notifierCore.getDotNotifierForTag(tagName)
+//        val dotView = notifierCore.getDotNotifierForTag(tagName)
 
-        notifierCore.canShowNotifierHere(tagName).observe(this) {
-            Log.d(TAG, "onCreate: ")
-            Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-            dotView?.let { view ->
-                view.layoutParams = ViewGroup.LayoutParams(28, 28)
-                if (it)
-                    layout.addView(view)
-                else layout.removeView(view)
-                layout.invalidate()
-            }
+//        notifierCore.canShowNotifierHere(tagName).observe(this) {
+//            Log.d(TAG, "onCreate: ")
+//            Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+//            dotView?.let { view ->
+//                view.layoutParams = ViewGroup.LayoutParams(28, 28)
+//                if (it)
+//                    layout.addView(view)
+//                else layout.removeView(view)
+//                layout.invalidate()
+//            }
         }
 
-        findViewById<Button>(R.id.button).setOnClickListener { notifierCore.notifierShown(tagName) }
+//        findViewById<Button>(R.id.button).setOnClickListener { notifierCore.notifierShown(tagName) }
 
-    }
 }

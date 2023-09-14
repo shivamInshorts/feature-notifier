@@ -1,7 +1,13 @@
 package com.nis.app.featurenotifier
 
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import com.nis.app.featurenotifier.model.NodeData
 import com.nis.app.featurenotifier.views.BannerNotifierView
 import com.nis.app.featurenotifier.views.DotNotifierView
@@ -10,11 +16,13 @@ import com.nis.app.featurenotifier.views.NumberNotifierView
 
 class NotifierCore() {
 
-    private var tagToNodeDataMap: HashMap<String, NodeData?>? = null;
+    private var tagToNodeDataMap: HashMap<String, NodeData?> = hashMapOf()
     private val tagNameToBooleanMap: HashMap<String, MutableLiveData<Boolean>> = hashMapOf();
 
     private lateinit var properties: NotifierPropsInterface
     private var isNotifierEnabled: Boolean = false;
+
+    private val badgeDrawableMap = HashMap<String, BadgeDrawable>()
 
     init {
         NotifierLib.getInstance().getProperties().let { properties = it }
@@ -28,7 +36,9 @@ class NotifierCore() {
                 it?.let { isNotifierEnabled = it }
             }.dispose()
 
-        properties.getNotifierData(NotifierLib.getInstance().getProperties().getApplicationContext()!!)
+        properties.getNotifierData(
+            NotifierLib.getInstance().getProperties().getApplicationContext()!!
+        )
             .subscribe {
                 updateData(it!!.nodes);
             }.dispose()
@@ -39,13 +49,12 @@ class NotifierCore() {
     }
 
     // TODO make the method return non nullable, create a function isTagNameValid?
-    fun canShowNotifierHere(tagName: String): LiveData<Boolean> {
-        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!! else MutableLiveData(false);
+    fun canShowNotifierHere(tagName: String): Boolean? {
+        return if (tagNameToBooleanMap.containsKey(tagName)) tagNameToBooleanMap[tagName]!!.value else false
     }
 
     fun notifierShown(tagName: String) {
-        if (tagToNodeDataMap == null) return
-        val nodesData = tagToNodeDataMap!!
+        val nodesData = tagToNodeDataMap
         val currNode = if (nodesData[tagName] != null) nodesData[tagName]!! else return;
 
         currNode.count -= 1
@@ -56,6 +65,12 @@ class NotifierCore() {
             for (parent in parentPath) {
                 notifierShown(parent)
             }
+        }
+    }
+
+    fun clearOrHideBatch(tagName: String) {
+        badgeDrawableMap[tagName]?.let {
+            it.isVisible = false
         }
     }
 
@@ -82,6 +97,16 @@ class NotifierCore() {
             null
     }
 
+    fun addBadgeNotifierForView(view: View) {
+        if (canShowNotifierHere(view.tag.toString()) == false) return
+        val badge = BadgeDrawable.create(view.context)
+        badge.isVisible = true
+        Handler(Looper.getMainLooper()).postDelayed({
+            BadgeUtils.attachBadgeDrawable(badge, view)
+        }, 200)
+        badgeDrawableMap[view.tag.toString()] = badge
+    }
+
     private fun getBannerNotifierForTag(tagName: String): BannerNotifierView? {
         TODO("Not yet implemented")
     }
@@ -96,7 +121,7 @@ class NotifierCore() {
 
     // A single view type for every node
     private fun viewTypeForTag(tagName: String, viewType: String): ViewType? {
-        return if (tagToNodeDataMap?.get(tagName)?.viewType?.containsKey(viewType) == true)
+        return if (tagToNodeDataMap[tagName]?.viewType?.containsKey(viewType) == true)
             ViewType.fromString(viewType)
         else
             null;
